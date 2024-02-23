@@ -20,7 +20,7 @@ This class represents a number baseball game. It has attributes for the number o
 
 - Alone: The user plays the game alone.
 - Auto: The computer plays the game automatically.
-- Compete: The user and the computer compete against each other.
+- Compete: The user and the computer compete for common target number.
 
 ## How to Run
 
