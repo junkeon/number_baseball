@@ -8,6 +8,7 @@ This class represents a number baseball game. It has attributes for the number o
 
 ### Methods
 
+- `start()`: Start game.
 - `set_rounds()`: Sets the number of rounds in the game.
 - `set_length()`: Sets the length of the target number.
 - `set_mode()`: Sets the game mode.
