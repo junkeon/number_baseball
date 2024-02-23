@@ -1,8 +1,9 @@
-from bot import Bot
+import os
+import time
 
-from utils import *
-
-from history import History
+from .bot import Bot
+from .history import History
+from .utils import *
 
 
 class Game:
@@ -25,7 +26,36 @@ class Game:
     - play_compete(): Plays the game in Compete mode.
     """
 
-    def __init__(self):
+    def __init__(self, N=0, L=0, target=[], mode=0, history=None):
+        """
+        Initialize the Game object.
+
+        Parameters:
+        - N (int): Number of rounds in the game.
+        - L (int): Length of the target number.
+        - target (list): The target number to guess.
+        - mode (int): The mode of the game (1: Alone, 2: Auto, 3: Compete).
+        - history (History): The history of the game.
+        """
+        self.N = N
+        self.L = L
+        self.target = target
+        self.mode = mode
+        self.history = history
+
+    def start(self):
+        """
+        Starts the Number Baseball game.
+        """
+        os.system("clear")
+        print("Welcome to Number Baseball!\n")
+
+        show_rule = input("Show rule? (y/n) : ").lower()
+        if show_rule == "y":
+            print_rule()
+
+        print()
+
         self.N = self.set_rounds()
         self.L = self.set_length()
         self.target = generate_numbers(self.L)
@@ -39,6 +69,18 @@ class Game:
             self.history = self.play_compete()
         else:
             print("Invalid mode!")
+
+        print()
+        self.history.show_history()
+        print()
+
+        if input("Play again? (y/n) : ").lower() == "y":
+            self.start()
+            print()
+
+    def show_rule(self):
+        # TODO: Implement this method
+        print("NOT YET IMPLEMENTED!")
 
     def set_rounds(self):
         """
@@ -79,7 +121,7 @@ class Game:
         Returns:
             int: The selected mode (1, 2, or 3).
         """
-        mode = input("> Mode (1: Alone, 2: Auto, 3: Compete) : ")
+        mode = input("> Mode [1: Alone, 2: Auto, 3: Compete] : ")
         if mode not in ["1", "2", "3"]:
             print("Invalid input! Please input 1, 2, or 3.")
             return self.set_mode()
@@ -95,16 +137,18 @@ class Game:
         history = History()
         history.set_rounds(self.N)
         history.set_target(self.target)
+        history.set_mode(self.mode)
 
         for round in range(self.N):
             print(f"\nRound {round+1}")
-            guess = get_user_input(self.L)
+            guess, tick = get_user_input(self.L)
             score = get_score(self.target, guess)
             msg, is_end = format_score(score, self.L)
-            history.add_history(guess, score)
+            history.add_history(guess, score, tick)
 
             print(f'{" ".join(map(str, guess))} : {msg}')
             if is_end:
+                print()
                 print("You win!")
                 history.set_winner("User")
                 break
@@ -123,19 +167,21 @@ class Game:
         history = History()
         history.set_rounds(self.N)
         history.set_target(self.target)
+        history.set_mode(self.mode)
 
         bot = Bot(self.L)
         for round in range(self.N):
             print(f"\nRound {round+1}")
-            guess = bot.guess()
+            guess, tick = bot.guess()
             print(f"> Input {self.L}-digit number: {' '.join(map(str, guess))}")
             score = get_score(self.target, guess)
             msg, is_end = format_score(score, self.L)
-            history.add_history(guess, score)
+            history.add_history(guess, score, tick)
             bot.update(guess, score)
 
             print(f'{" ".join(map(str, guess))} : {msg} ({len(bot)})')
             if is_end:
+                print()
                 print("Bot wins!")
                 history.set_winner("Bot")
                 break
@@ -154,25 +200,27 @@ class Game:
         history = History()
         history.set_rounds(self.N)
         history.set_target(self.target)
+        history.set_mode(self.mode)
 
         bot = Bot(self.L)
         for round in range(self.N):
 
             if round % 2 == 0:
                 print(f"\nRound {round+1} (Bot's turn)")
+                guess, tick = bot.guess()
                 print(f"> Input {self.L}-digit number: {' '.join(map(str, guess))}")
-                guess = bot.guess()
             else:
                 print(f"\nRound {round+1} (Your turn)")
-                guess = get_user_input(self.L)
+                guess, tick = get_user_input(self.L)
 
             score = get_score(self.target, guess)
             msg, is_end = format_score(score, self.L)
-            history.add_history(guess, score)
+            history.add_history(guess, score, tick)
             bot.update(guess, score)
 
             print(f'{" ".join(map(str, guess))} : {msg} ({len(bot)})')
             if is_end:
+                print()
                 if round % 2 == 0:
                     print("Bot wins!")
                     history.set_winner("Bot")
@@ -183,5 +231,4 @@ class Game:
         else:
             print("Draw!")
 
-        history.print()
         return history

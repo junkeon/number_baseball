@@ -1,8 +1,9 @@
 import itertools
+import math
 import random
 import time
 
-from utils import get_score
+from .utils import get_score
 
 INIT_SCORE = 1000
 
@@ -22,17 +23,20 @@ class Bot:
     - update(self, guess, score): Update the list of candidates based on the guess and score.
     """
 
-    def __init__(self, L):
+    def __init__(self, L, level=None):
         """
         Initialize the Bot class.
 
         Parameters:
         L (int): The length of the number to guess.
+        level (int, optional): The level of the bot. Range 0(dum) - 1(smart). Defaults to 0.
 
         Returns:
         None
         """
         self.candis = self.init_candis(L)
+        if level is None:
+            self.level = self.set_level()
 
     def __len__(self) -> int:
         """
@@ -55,6 +59,21 @@ class Bot:
         """
         return [(candi, INIT_SCORE) for candi in itertools.permutations(range(10), L)]
 
+    def set_level(self):
+        """
+        Set the level of the bot.
+
+        Returns:
+        None
+        """
+        level = input("> Set the level of the bot [ 1: dum - 10: smart ] : ")
+        if not level.isnumeric() or int(level) < 1 or int(level) > 10:
+            print("Invalid input! Please input number between 1 and 10")
+            return self.set_level()
+        level = int(level)
+
+        return level
+
     def guess(self):
         """
         Make a guess.
@@ -62,9 +81,18 @@ class Bot:
         Returns:
         int: The guessed number.
         """
-        tic = random.random()
+        _tic = time.time()
+        candi, score = self.candis[0]
+
+        tic = random.random() * math.log(len(self.candis) + 1, score / 10 + 1.1)
         time.sleep(tic)
-        return self.candis[0][0]
+
+        if random.random() < 1 - self.level / 10:
+            candi = random.choice(self.candis)[0]
+
+        _toc = time.time()
+
+        return candi, _toc - _tic
 
     def update(self, guess, score):
         """
@@ -90,4 +118,7 @@ class Bot:
                         s = 0
                     s += add_score(score)
                 tmp.append((candi, s))
+            else:
+                if random.random() < 1 - self.level / 10:
+                    tmp.append((candi, s))
         self.candis = sorted(tmp, key=lambda x: x[1], reverse=True)

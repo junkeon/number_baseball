@@ -1,4 +1,5 @@
 import random
+import time
 
 
 def generate_numbers(L=3):
@@ -56,28 +57,34 @@ def get_user_input(L):
         > Input 3-digit number: 123
         [1, 2, 3]
     """
-    guess = input(f"> Input {L}-digit number: ")
 
-    if " " in guess:
-        guess = guess.split()
-    elif "," in guess:
-        guess = guess.split(",")
-    else:
-        guess = list(guess)
+    _tic = time.time()
+    while True:
+        guess = input(f"> Input {L}-digit number: ")
 
-    if len(guess) != L:
-        print(f"Invalid input! Please input {L}-digit number.")
-        return get_user_input(L)
+        if " " in guess:
+            guess = guess.split()
+        elif "," in guess:
+            guess = guess.split(",")
+        else:
+            guess = list(guess)
 
-    if not all(map(str.isnumeric, guess)):
-        print("Invalid input! Please input number.")
-        return get_user_input(L)
+        if len(guess) != L:
+            print(f"Invalid input! Please input {L}-digit number.")
+            continue
 
-    if len(set(guess)) != L:
-        print("Invalid input! Please input distinct number.")
-        return get_user_input(L)
+        if not all(map(str.isnumeric, guess)):
+            print("Invalid input! Please input number.")
+            continue
 
-    return list(map(int, guess))
+        if len(set(guess)) != L:
+            print("Invalid input! Please input distinct number.")
+            continue
+
+        break
+    _toc = time.time()
+
+    return list(map(int, guess)), _toc - _tic
 
 
 def format_score(score, L):
