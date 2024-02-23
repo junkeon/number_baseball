@@ -25,7 +25,7 @@ This class represents a number baseball game. It has attributes for the number o
 
 This project is written in Python 3. You can run it in a Python 3 environment as follows:
 
-```bash
+```python
 from number_baseball import *
 
 Game().start()
