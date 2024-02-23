@@ -26,7 +26,9 @@ This class represents a number baseball game. It has attributes for the number o
 This project is written in Python 3. You can run it in a Python 3 environment as follows:
 
 ```bash
-python game.py
+from number_baseball import *
+
+Game().start()
 ```
 
 When you start the game, you will be prompted to enter the number of rounds, the length of the target number, and the game mode. Enter these values to start the game.
