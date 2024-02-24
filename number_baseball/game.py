@@ -42,6 +42,7 @@ class Game:
         self.target = target
         self.mode = mode
         self.history = history
+        self.is_set = False
 
     def start(self):
         """
@@ -60,6 +61,7 @@ class Game:
         self.L = self.set_length()
         self.target = generate_numbers(self.L)
         self.mode = self.set_mode()
+        self.is_set = True
 
         if self.mode == 1:
             self.history = self.play_alone()
@@ -73,6 +75,8 @@ class Game:
         print()
         self.history.show_history()
         print()
+
+        self.is_set = False
 
         if input("Play again? (y/n) : ").lower() == "y":
             self.start()
@@ -134,6 +138,8 @@ class Game:
         Returns:
             History: The history of the game.
         """
+        assert self.is_set
+        
         history = History()
         history.set_rounds(self.N)
         history.set_target(self.target)
@@ -164,6 +170,8 @@ class Game:
         Returns:
             history (History): The history of the game.
         """
+        assert self.is_set
+        
         history = History()
         history.set_rounds(self.N)
         history.set_target(self.target)
@@ -197,6 +205,8 @@ class Game:
         Returns:
             history (History): The history of the game.
         """
+        assert self.is_set
+        
         history = History()
         history.set_rounds(self.N)
         history.set_target(self.target)
