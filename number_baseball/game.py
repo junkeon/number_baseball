@@ -53,7 +53,7 @@ class Game:
 
         show_rule = input("Show rule? (y/n) : ").lower()
         if show_rule == "y":
-            print_rule()
+            self.show_rule()
 
         print()
 
@@ -85,8 +85,44 @@ class Game:
             print()
 
     def show_rule(self):
-        # TODO: Implement this method
-        print("NOT YET IMPLEMENTED!")
+        print('How to play number baseball game')
+        print('- Goal: Guess the target number within the given number of rounds.')
+        time.sleep(1)
+        print('- Score: Home run, Strike, Ball, Out')
+        time.sleep(1)
+        print('  - Home run (HR): All numbers are correct and in the correct position. End the game.')
+        time.sleep(1)
+        print('  - Strike (S): The number is correct and in the correct position.')
+        time.sleep(1)
+        print('  - Ball (B): The number is correct but in the wrong position.')
+        time.sleep(1)
+        print('  - Out (O): No single number is correct.')
+        time.sleep(3)
+        print('- Example: Target number is 4 1 2')
+        time.sleep(1)
+        print('  - 5 6 7 -> O [No single number is correct]')
+        time.sleep(1)
+        print('  - 1 8 0 -> 0S 1B [1 is correct but in the wrong position]')
+        time.sleep(1)
+        print('  - 4 5 6 -> 1S 0B [4 is in the correct position]')
+        time.sleep(1)
+        print('  - 4 2 1 -> 2S [4 is in the correct position, 1 and 2 are correct but in the wrong position]')
+        time.sleep(1)
+        print('  - 4 1 2 -> Home run! [All numbers are correct and in the correct position]')
+        time.sleep(3)
+        print('- Modes: Alone, Auto, Compete, Dual')
+        time.sleep(1)
+        print('  - Alone: Play alone against the computer.')
+        time.sleep(1)
+        print('  - Auto: Watch the computer play against itself.')
+        time.sleep(1)
+        print('  - Compete: Play against the computer with in common target number.')
+        time.sleep(1)
+        print('  - Dual: Input your target number for computer and play against the computer.')
+        time.sleep(3)
+        print('- Have fun!')
+        print()
+
 
     def set_rounds(self):
         """
