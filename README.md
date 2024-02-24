@@ -15,12 +15,14 @@ This class represents a number baseball game. It has attributes for the number o
 - `play_alone()`: Plays the game in Alone mode.
 - `play_auto()`: Plays the game in Auto mode.
 - `play_compete()`: Plays the game in Compete mode.
+- `play_dual()` : Plays the game in Dual mode.
 
 ## Game Modes
 
 - Alone: The user plays the game alone.
 - Auto: The computer plays the game automatically.
 - Compete: The user and the computer compete for common target number.
+- Dual: The user and the computer play the game againt each other.
 
 ## How to Run
 
