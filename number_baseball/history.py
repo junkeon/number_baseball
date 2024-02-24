@@ -18,6 +18,7 @@ class History:
         """
         self.rounds = -1
         self.target = None
+        self.user_target = None
         self.winner = None
         self.mode = 0
         self.history = []
@@ -49,6 +50,15 @@ class History:
         """
         self.target = target
 
+    def set_user_target(self, target):
+        """
+        Set the target number.
+
+        Parameters:
+        - target (list): The target number.
+        """
+        self.user_target = target
+
     def set_winner(self, winner):
         """
         Set the winner of the game.
@@ -75,7 +85,11 @@ class History:
 
         print("Game History:")
         print(f"- Rounds: {self.rounds}")
-        print(f"- Target: {' '.join(map(str, self.target))}")
+        if self.user_target:
+            print(f"- Bot Target: {' '.join(map(str, self.target))}")
+            print(f"- User Target: {' '.join(map(str, self.user_target))}")
+        else:
+            print(f"- Target: {' '.join(map(str, self.target))}")
         print(f"- Winner: {self.winner}")
         print("- History:")
         for r_idx, (guess, score, tick) in enumerate(self.history, 1):
@@ -91,6 +105,10 @@ class History:
             elif self.mode == 3:
                 print(
                     f'  {"b" if r_idx%2 else "u"}{r_idx:02d}. {" ".join(map(str, guess))} : {msg:<10} - {tick:.2f} sec'
+                )
+            elif self.mode == 4:
+                print(
+                    f'  {"b" if r_idx%2 else "u"}{(r_idx+1)//2:02d}. {" ".join(map(str, guess))} : {msg:<10} - {tick:.2f} sec'
                 )
             else:
                 print(

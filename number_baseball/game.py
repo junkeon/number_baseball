@@ -69,6 +69,8 @@ class Game:
             self.history = self.play_auto()
         elif self.mode == 3:
             self.history = self.play_compete()
+        elif self.mode == 4:
+            self.history = self.play_dual()
         else:
             print("Invalid mode!")
 
@@ -120,14 +122,14 @@ class Game:
 
     def set_mode(self):
         """
-        Prompts the user to input a mode (1: Alone, 2: Auto, 3: Compete) and returns the selected mode as an integer.
+        Prompts the user to input a mode (1: Alone, 2: Auto, 3: Compete, 4: dual) and returns the selected mode as an integer.
 
         Returns:
             int: The selected mode (1, 2, or 3).
         """
-        mode = input("> Mode [1: Alone, 2: Auto, 3: Compete] : ")
-        if mode not in ["1", "2", "3"]:
-            print("Invalid input! Please input 1, 2, or 3.")
+        mode = input("> Mode [1: Alone, 2: Auto, 3: Compete, 4: Dual] : ")
+        if mode not in ["1", "2", "3", "4"]:
+            print("Invalid input! Please input 1, 2, 3, or 4.")
             return self.set_mode()
         return int(mode)
 
@@ -138,7 +140,7 @@ class Game:
         Returns:
             History: The history of the game.
         """
-        assert self.is_set
+        assert self.is_set, 'Game is not set!'
         
         history = History()
         history.set_rounds(self.N)
@@ -170,7 +172,7 @@ class Game:
         Returns:
             history (History): The history of the game.
         """
-        assert self.is_set
+        assert self.is_set, 'Game is not set!'
         
         history = History()
         history.set_rounds(self.N)
@@ -205,7 +207,7 @@ class Game:
         Returns:
             history (History): The history of the game.
         """
-        assert self.is_set
+        assert self.is_set, 'Game is not set!'
         
         history = History()
         history.set_rounds(self.N)
@@ -214,7 +216,6 @@ class Game:
 
         bot = Bot(self.L)
         for round in range(self.N):
-
             if round % 2 == 0:
                 print(f"\nRound {round+1} (Bot's turn)")
                 guess, tick = bot.guess()
@@ -242,3 +243,50 @@ class Game:
             print("Draw!")
 
         return history
+    
+    def play_dual(self):
+        assert self.is_set, 'Game is not set!'
+
+        history = History()
+        history.set_rounds(self.N)
+        history.set_target(self.target)
+        user_target, _ = get_user_input(self.L)
+        history.set_user_target(user_target)
+        history.set_mode(self.mode)
+
+        bot = Bot(self.L)
+        for round in range(self.N*2):
+            print(f"\nRound {round+1} (Bot's turn)")
+            guess, tick = bot.guess()
+            print(f"> Input {self.L}-digit number: {' '.join(map(str, guess))}")
+            score = get_score(user_target, guess)
+            msg, is_end = format_score(score, self.L)
+            history.add_history(guess, score, tick)
+            bot.update(guess, score)
+
+            print(f'{" ".join(map(str, guess))} : {msg} ({len(bot)})')
+            if is_end:
+                print()
+                print("Bot wins!")
+                history.set_winner("Bot")
+                break
+
+            print(f"\nRound {round+1} (Your turn)")
+            guess, tick = get_user_input(self.L)
+            score = get_score(self.target, guess)
+            msg, is_end = format_score(score, self.L)
+            history.add_history(guess, score, tick)
+
+            print(f'{" ".join(map(str, guess))} : {msg}')
+            if is_end:
+                print()
+                print("You win!")
+                history.set_winner("User")
+                break
+        
+        else:
+            print("Draw!")
+
+        return history
+
+
